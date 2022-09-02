@@ -5,6 +5,9 @@ const catchAsync = require('../utils/catchAsync')
 const Campground = require('../models/campground');
 const {isLoggedIn, isAuthor} = require('../middleware')
 
+const multer = require('multer')
+const {storage} = require('../cloudinary/index')
+const upload = multer({storage})
 
 
 router.get('/', catchAsync(async (req, res)=>{
@@ -12,17 +15,22 @@ router.get('/', catchAsync(async (req, res)=>{
     res.render('campgrounds/index.ejs', {campgrounds});
 }))
 
-router.post('/', catchAsync( async (req, res, next)=>{
+router.post('/', isLoggedIn, upload.array('image') ,catchAsync( async (req, res, next)=>{
     const campground = new Campground(req.body);
     campground.author = req.user._id;
+    campground.images = req.files.map(f => ({url : f.path, filename : f.filename}));
     await campground.save();
+    console.log(campground);
     req.flash('success', 'Successfully made a new campground');
     res.redirect(`/campgrounds/${campground._id}`);
 }))
 
-router.put('/:id', isLoggedIn, isAuthor, catchAsync(async (req, res)=>{
+router.put('/:id', isLoggedIn, upload.array('image'), isAuthor, catchAsync(async (req, res)=>{
     const {id} = req.params;
-    await Campground.findByIdAndUpdate(id, {...req.body});
+    const campground = await Campground.findByIdAndUpdate(id, {...req.body});
+    const imgs = req.files.map(f => ({url : f.path, filename : f.filename}));
+    campground.images.push(...imgs);
+    await campground.save();
     req.flash('success', 'Successfully updated campground');
     res.redirect(`/campgrounds/${id}`);
 }))
