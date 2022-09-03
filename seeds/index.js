@@ -37,7 +37,10 @@ const seedDB = async () => {
                   filename: 'CampingWorld/wvuh8mekpg18zlrpyyyk',
                 }
               ],
-
+            geometry : {
+              type : "Point",
+              coordinates : [-113.1331, 47.0202]
+            },
     description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis suscipit blanditiis distinctio voluptatem a numquam architecto nisi veritatis repellat praesentium recusandae porro corrupti, officiis corporis magnam quo cum, possimus ipsam.",
     price: random1000
         })
