@@ -88,6 +88,8 @@ map.on("load", () => {
       });
   });
 
+map.addControl(new mapboxgl.NavigationControl())
+
   // When a click event occurs on a feature in
   // the unclustered-point layer, open a popup at
   // the location of the feature, with
