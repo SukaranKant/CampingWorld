@@ -18,8 +18,13 @@ const campgroundRoutes = require('./routes/campgrounds')
 const reviewRoutes = require('./routes/reviews')
 const userRoutes = require('./routes/users')
 
+const dbURL = 'mongodb://localhost:27017/yelp-camp';
+// const dbURL = process.env.DB_URL;
+
 // Connectb with mongoDB 
-mongoose.connect('mongodb://localhost:27017/yelp-camp')
+mongoose.connect(dbURL, { useNewUrlParser: true,
+    useUnifiedTopology: true, 
+})
 .then(()=>{
     console.log("database open");
 })
@@ -28,6 +33,7 @@ mongoose.connect('mongodb://localhost:27017/yelp-camp')
 })
 
 const app = express()
+
 
 const sessionConfig = {
     secret : 'thisissomesecret',
